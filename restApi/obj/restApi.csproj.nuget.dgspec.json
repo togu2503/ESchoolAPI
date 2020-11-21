@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\togu2\\source\\repos\\restApi\\restApi\\restApi.csproj": {}
+    "D:\\University\\4th\\Programming of software systems\\ESchoolAPI\\restApi\\restApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\togu2\\source\\repos\\restApi\\restApi\\restApi.csproj": {
+    "D:\\University\\4th\\Programming of software systems\\ESchoolAPI\\restApi\\restApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\togu2\\source\\repos\\restApi\\restApi\\restApi.csproj",
+        "projectUniqueName": "D:\\University\\4th\\Programming of software systems\\ESchoolAPI\\restApi\\restApi.csproj",
         "projectName": "restApi",
-        "projectPath": "C:\\Users\\togu2\\source\\repos\\restApi\\restApi\\restApi.csproj",
-        "packagesPath": "C:\\Users\\togu2\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\togu2\\source\\repos\\restApi\\restApi\\obj\\",
+        "projectPath": "D:\\University\\4th\\Programming of software systems\\ESchoolAPI\\restApi\\restApi.csproj",
+        "packagesPath": "C:\\Users\\nickg\\.nuget\\packages\\",
+        "outputPath": "D:\\University\\4th\\Programming of software systems\\ESchoolAPI\\restApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\togu2\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\nickg\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -45,6 +45,10 @@
             "Microsoft.AspNet.WebApi.Core": {
               "target": "Package",
               "version": "[5.2.7, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",

@@ -9375,6 +9375,7 @@
     ".NETCoreApp,Version=v3.1": [
       "FluentNHibernate >= 3.1.0",
       "Microsoft.AspNet.WebApi.Core >= 5.2.7",
+      "Microsoft.EntityFrameworkCore >= 5.0.0",
       "Microsoft.EntityFrameworkCore.Design >= 5.0.0",
       "Microsoft.EntityFrameworkCore.InMemory >= 5.0.0",
       "Microsoft.EntityFrameworkCore.SqlServer >= 5.0.0",
@@ -9384,19 +9385,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\togu2\\.nuget\\packages\\": {}
+    "C:\\Users\\nickg\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\togu2\\source\\repos\\restApi\\restApi\\restApi.csproj",
+      "projectUniqueName": "D:\\University\\4th\\Programming of software systems\\ESchoolAPI\\restApi\\restApi.csproj",
       "projectName": "restApi",
-      "projectPath": "C:\\Users\\togu2\\source\\repos\\restApi\\restApi\\restApi.csproj",
-      "packagesPath": "C:\\Users\\togu2\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\togu2\\source\\repos\\restApi\\restApi\\obj\\",
+      "projectPath": "D:\\University\\4th\\Programming of software systems\\ESchoolAPI\\restApi\\restApi.csproj",
+      "packagesPath": "C:\\Users\\nickg\\.nuget\\packages\\",
+      "outputPath": "D:\\University\\4th\\Programming of software systems\\ESchoolAPI\\restApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\togu2\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\nickg\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -9427,6 +9428,10 @@
           "Microsoft.AspNet.WebApi.Core": {
             "target": "Package",
             "version": "[5.2.7, )"
+          },
+          "Microsoft.EntityFrameworkCore": {
+            "target": "Package",
+            "version": "[5.0.0, )"
           },
           "Microsoft.EntityFrameworkCore.Design": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",

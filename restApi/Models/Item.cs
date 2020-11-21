@@ -17,8 +17,7 @@ namespace restApi.Models
         public string Name { get; set; }
         [Required]
         [MaxLength(256)]
-        public bool IsComplete { get; set; }
-
+        public bool IsComplete { get; set; }                
         Item(int id, string name, bool isComplete)
         {
             Id = id;
