@@ -11,13 +11,15 @@ using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Text.Json;
+using Newtonsoft.Json.Linq;
 using restApi.Helpers;
 using restApi.DAL;
 using restApi.Models;
 
 namespace restApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/SignUp")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -28,45 +30,15 @@ namespace restApi.Controllers
             _context = context;
         }
 
-        // PUT: api/Users/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
-        {
-            if (id != user.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(user).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/Users
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task PostUser(User user)
+        public async Task PostUser([FromBody] JsonDocument request)
         {
-            user.Permissions = "";
+            JObject jValue = JObject.Parse(request.RootElement.ToString());
+            User user = new User(0, jValue.GetValue("login").ToString(), jValue.GetValue("password").ToString());
+            user.Permissions = "0";
             Response.ContentType = "application/json";
             byte[] body;
 
