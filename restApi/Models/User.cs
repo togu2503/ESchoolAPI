@@ -7,74 +7,74 @@ using System.Threading.Tasks;
 
 namespace restApi.Models
 {
-    [Table("pupils")]
-    public class Pupil : IPerson
+    [Table("users")]
+    public class User
     {
         private int _id;
-        private string _name;
-        private string _surname;
-        private string _patronymic;
-        private string _phone;
-        
-        [Key]
+        private string _login;
+        private string _password;
+        private string _permissions;
+
         public int Id
         {
             get { return _id; }
             set
             {
-                if(value >= 0)
+                if (value >= 0)
                 {
                     _id = value;
                 }
             }
         }
         [Required]
-        [MaxLength(256)]
-        public string Name
+        [MaxLength(64)]
+        public string Login
         {
             get
             {
-                return _name;
+                return _login;
             }
             set
             {
                 if (!String.IsNullOrEmpty(value) || !String.IsNullOrWhiteSpace(value))
                 {
-                    _name = value;
-                }
-            } 
-        }
-        [Required]
-        [MaxLength(256)]
-        public string Surname
-        {
-            get { return _surname; }
-            set
-            {
-                if(!String.IsNullOrEmpty(value) || !String.IsNullOrWhiteSpace(value))
-                {
-                    _surname = value;
+                    _login= value;
                 }
             }
         }
         [Required]
         [MaxLength(256)]
-        public string Patronymic
+        public string Password
         {
-            get { return _patronymic; }
+            get { return _password; }
             set
             {
                 if (!String.IsNullOrEmpty(value) || !String.IsNullOrWhiteSpace(value))
                 {
-                    _patronymic = value;
+                    _password = value;
                 }
             }
         }
-        [MaxLength(256)]
-        public string Phone
-        {   
-            get => _phone;
-            set => _phone = value; 
+        [Required]
+        [MaxLength(128)]
+        public string Permissions
+        {
+            get { return _permissions; }
+            set
+            {
+                if (!String.IsNullOrEmpty(value) || !String.IsNullOrWhiteSpace(value))
+                {
+                    _permissions = value;
+                }
+            }
+        }
+
+        public User(int id=0, string login="", string password="", string permissions="")
+        {
+            Id = id;
+            Login = login;
+            Password = password;
+            Permissions = permissions;
         }
     }
 }

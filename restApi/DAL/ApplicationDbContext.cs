@@ -9,12 +9,14 @@ namespace restApi.DAL
 {
     public class ApplicationDBContext : DbContext
     {
-        public DbSet<Item> Items { get; set; }
         public ApplicationDBContext() : base()
         {
         }
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options)
     : base(options)
         { }
+        public DbSet<restApi.Models.Pupil> Pupil { get; set; }
+        public DbSet<restApi.Models.User> User { get; set; }
+        public DbSet<restApi.Models.ActiveUser> ActiveUser { get; set; }
     }
 }

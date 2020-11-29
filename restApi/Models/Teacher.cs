@@ -14,7 +14,7 @@ namespace restApi.Models
         private string _name;
         private string _surname;
         private string _patronymic;
-        private string _phoneNumber;
+        private string _phone;
         [Key]
         public int Id
         {
@@ -67,10 +67,10 @@ namespace restApi.Models
             }
         }
         [MaxLength(256)]
-        public string PhoneNumber
+        public string Phone
         {
-            get { return _phoneNumber; }
-            set { _phoneNumber = value; }
+            get { return _phone; }
+            set { _phone = value; }
         }
     }
 }
