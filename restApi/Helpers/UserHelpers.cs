@@ -46,6 +46,14 @@ namespace restApi.Helpers
             return authToken;
         }
 
+        static public User GetUser(string token,ApplicationDBContext context)
+        {
+           int userId = context.ActiveUser.FirstOrDefault(activeUser => activeUser.Token == token).UserId;
+            var user = context.User.FirstOrDefault(u => u.Id == userId);
+            if (user != null)
+                return user;
+            return new User();
+        }
         static public byte[] DuplicateUserResponse()
         {
             var responseBody = new JObject();
@@ -74,6 +82,14 @@ namespace restApi.Helpers
         {
             var responseBody = new JObject();
             responseBody.Add("auth", "");
+            byte[] body = Encoding.UTF8.GetBytes(responseBody.ToString());
+            return body;
+        }
+
+        static public byte[] SuccessDeleting()
+        {
+            var responseBody = new JObject();
+            responseBody.Add("status", "Deleted");
             byte[] body = Encoding.UTF8.GetBytes(responseBody.ToString());
             return body;
         }

@@ -12,12 +12,12 @@ namespace restApi.Models
     {
         private int _id;
         private int _day;
-        private DateTime _timeStart;
-        private DateTime _timeFinish;
-        private Lesson _lesson;
-        private Form _form;
+        private int _lessonNum;
+        private int _lessonId;
+        private int _formId;
 
         [Key]
+        [Column("id")]
         public int Id
         {
             get { return _id; }
@@ -30,6 +30,7 @@ namespace restApi.Models
             }
         }
         [Required]
+        [Column("day")]
         public int Day
         {
             get { return _day; }
@@ -41,64 +42,43 @@ namespace restApi.Models
                 }
             }
         }
+        
         [Required]
-        public DateTime TimeStart
+        [Column("lesson_num")]
+        public int LessonNum
         {
-            get { return _timeStart; }
-            set
-            {
-                if (value != null)
-                {
-                    _timeStart = value;
-                }
-                else
-                {
-                    //in the case if something will going wrong.
-                    _timeStart = new DateTime(1000, 10, 10,0,0,0);
-                }
-            }
+            get { return _lessonNum; }
+            set { _lessonNum = value; }
         }
+        
         [Required]
-        public DateTime TimeFinish
+        [Column("lesson_id")]
+        public int LessonId
         {
-            get { return _timeFinish; }
-            set
-            {
-                if (value != null)
-                {
-                    _timeFinish = value;
-                }
-                else
-                {
-                    //in the case if something will going wrong.
-                    _timeFinish = new DateTime(1001, 11, 11, 0, 0, 0);
-                }
-            }
-        }
-        [Required]
-        public Lesson Lesson
-        {
-            get { return _lesson; }
+            get { return _lessonId; }
             set
             {
                 if(value != null)
                 {
-                    _lesson = value;
+                    _lessonId = value;
                 }
             }
         }
         [Required]
-        public Form Form
+        [Column("form_id")]
+        public int FormId
         {
-            get { return _form; }
+            get { return _formId; }
             set
             {
                 if(value != null)
                 {
-                    _form = value;
+                    _formId = value;
                 }
             }
         }
+        public virtual Form Form { get; set; }
+        public virtual Lesson Lesson { get; set; }
 
     }
 }

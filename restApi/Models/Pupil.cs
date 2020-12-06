@@ -15,6 +15,7 @@ namespace restApi.Models
         private string _surname;
         private string _patronymic;
         private string _phone;
+        private int _accountId;
         
         [Key]
         public int Id
@@ -75,6 +76,13 @@ namespace restApi.Models
         {   
             get => _phone;
             set => _phone = value; 
+        }
+
+        [Column("account_id")]
+        public int AccountId
+        {
+            get { return _accountId; }
+            set { _accountId = value; }
         }
     }
 }

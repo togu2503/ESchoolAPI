@@ -36,9 +36,9 @@ namespace restApi.Controllers
         [HttpPost]
         public async Task PostUser([FromBody] JsonDocument request)
         {
-            JObject jValue = JObject.Parse(request.RootElement.ToString());
+            JObject jValue = WebMessageHelpers.GetJObjectFromBody(request);
             User user = new User(0, jValue.GetValue("login").ToString(), jValue.GetValue("password").ToString());
-            user.Permissions = "0";
+            user.AccessLevel = 0;
             Response.ContentType = "application/json";
             byte[] body;
 
@@ -58,20 +58,20 @@ namespace restApi.Controllers
             await Response.Body.WriteAsync(body, 0, body.Length);
         }
 
-        // DELETE: api/Users/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<User>> DeleteUser(int id)
+        // DELETE: api/Users/
+        [HttpDelete]
+        public async Task<ActionResult<User>> DeleteUser([FromBody] JsonDocument request)
         {
-            var user = await _context.User.FindAsync(id);
-            if (user == null)
+            JObject jValue = WebMessageHelpers.GetJObjectFromBody(request);
+            string[] token = Request.Headers.GetCommaSeparatedValues("Authorization");
+            var user = UserHelpers.GetUser(token[0], _context);
+            if (user != null)
             {
-                return NotFound();
+                _context.User.Remove(user);
+                await _context.SaveChangesAsync();
             }
 
-            _context.User.Remove(user);
-            await _context.SaveChangesAsync();
-
-            return user;
+            return user;//TODO
         }
 
         private bool UserExists(int id)

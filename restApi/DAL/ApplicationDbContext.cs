@@ -18,5 +18,8 @@ namespace restApi.DAL
         public DbSet<restApi.Models.Pupil> Pupil { get; set; }
         public DbSet<restApi.Models.User> User { get; set; }
         public DbSet<restApi.Models.ActiveUser> ActiveUser { get; set; }
+        public DbSet<restApi.Models.Curriculum> Curriculum { get; set; }
+        public DbSet<restApi.Models.Lesson> Lesson{ get; set; }
+        public DbSet<restApi.Models.Form> Form { get; set; }
     }
 }

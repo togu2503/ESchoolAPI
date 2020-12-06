@@ -12,9 +12,10 @@ namespace restApi.Models
     {
         private int _id;
         private string _formTitle;
-        private Teacher _teacher;
+        private int _teacherId;
 
         [Key]
+        [Column("id")]
         public int Id
         { 
             get { return _id; }
@@ -27,6 +28,7 @@ namespace restApi.Models
             }
         }
         [Required]
+        [Column("form_title")]
         [MaxLength(256)]
         public string FormTitle
         {
@@ -40,17 +42,19 @@ namespace restApi.Models
             }
         }
         [Required]
+        [Column("class_teacher")]
         
-        public Teacher Teacher
+        public int TeacherId
         {
-            get { return _teacher; }
+            get { return _teacherId; }
             set
             {
                 if(value!=null)
                 {
-                    _teacher = value;
+                    _teacherId = value;
                 }
             }
         }
+        public virtual Teacher Teacher { get; set; }
     }
 }

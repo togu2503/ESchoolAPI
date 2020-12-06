@@ -30,8 +30,8 @@ namespace restApi.Controllers
         [HttpPost]
         public async Task PostActiveUser([FromBody]JsonDocument request)
         {
-            
-            JObject jValue = JObject.Parse(request.RootElement.ToString());
+
+            JObject jValue = WebMessageHelpers.GetJObjectFromBody(request);
 
             User userAuth = new User(0, jValue.GetValue("login").ToString(), jValue.GetValue("password").ToString());
             var user = _context.User.FirstOrDefault(row => row.Login == userAuth.Login);
