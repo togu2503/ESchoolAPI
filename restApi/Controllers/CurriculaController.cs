@@ -30,22 +30,17 @@ namespace restApi.Controllers
             _context = context;
         }
 
-        // GET: api/Curricula
         [HttpGet]
         public async Task GetCurriculum()
         {
-            var curiculum = _context.Curriculum.ToList();
-            var lessons = _context.Lesson.ToList();
-            var forms = _context.Form.ToList();
-
-            byte [] body = CuriculumHelpers.GetCurriculumResponse(curiculum, lessons, forms);
+            byte [] body = CuriculumHelpers.GetTimeTableWithoutHomeworkResponse(_context);
             await Response.Body.WriteAsync(body, 0, body.Length);
 
         }
 
         // GET: api/Curricula/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Curriculum>> GetCurriculum(int id)
+        public async Task<ActionResult<Curiculum>> GetCurriculum(int id)
         {
             var curriculum = await _context.Curriculum.FindAsync(id);
 
@@ -61,7 +56,7 @@ namespace restApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCurriculum(int id, Curriculum curriculum)
+        public async Task<IActionResult> PutCurriculum(int id, Curiculum curriculum)
         {
             if (id != curriculum.Id)
             {
@@ -93,7 +88,7 @@ namespace restApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Curriculum>> PostCurriculum(Curriculum curriculum)
+        public async Task<ActionResult<Curiculum>> PostCurriculum(Curiculum curriculum)
         {
             _context.Curriculum.Add(curriculum);
             await _context.SaveChangesAsync();
@@ -103,7 +98,7 @@ namespace restApi.Controllers
 
         // DELETE: api/Curricula/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Curriculum>> DeleteCurriculum(int id)
+        public async Task<ActionResult<Curiculum>> DeleteCurriculum(int id)
         {
             var curriculum = await _context.Curriculum.FindAsync(id);
             if (curriculum == null)

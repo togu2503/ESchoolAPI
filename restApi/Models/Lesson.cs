@@ -12,7 +12,7 @@ namespace restApi.Models
     {
         private int _id;
         private string _title;
-        private int _teacherId;
+
 
         [Key]
         [Column("id")]
@@ -45,21 +45,6 @@ namespace restApi.Models
                 }
             }
         }
-        [Required]
-        [Column("teacher_id")]
-        public int TeacherId
-        {
-            get { return _teacherId; }
-            set
-            {
-                if(value != null)
-                {
-                    _teacherId = value;                    
-                }
-            }
-        }
-
-        public virtual Teacher Teacher { get; set; }
 
     }
 }

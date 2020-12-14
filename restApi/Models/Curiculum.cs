@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 namespace restApi.Models
 {
     [Table("curiculum")]
-    public class Curriculum
+    public class Curiculum
     {
         private int _id;
         private int _day;
         private int _lessonNum;
         private int _lessonId;
         private int _formId;
+        private int _teacherId;
 
         [Key]
         [Column("id")]
@@ -34,13 +35,7 @@ namespace restApi.Models
         public int Day
         {
             get { return _day; }
-            set
-            {
-                if(value > 0)
-                {
-                    _day = value;
-                }
-            }
+            set {_day = value;}
         }
         
         [Required]
@@ -56,29 +51,28 @@ namespace restApi.Models
         public int LessonId
         {
             get { return _lessonId; }
-            set
-            {
-                if(value != null)
-                {
-                    _lessonId = value;
-                }
-            }
+            set {_lessonId = value;}
         }
         [Required]
         [Column("form_id")]
         public int FormId
         {
             get { return _formId; }
+            set {_formId = value;}
+        }
+
+        [Column("teacher_id")]
+        public int TeacherId
+        {
+            get { return _teacherId; }
             set
             {
-                if(value != null)
-                {
-                    _formId = value;
-                }
+                    _teacherId = value;
             }
         }
         public virtual Form Form { get; set; }
         public virtual Lesson Lesson { get; set; }
+        public virtual Teacher Teacher { get; set; }
 
     }
 }

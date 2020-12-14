@@ -13,7 +13,6 @@ using restApi.Helpers;
 
 namespace restApi.Controllers
 {
-    [Route("api/Login")]
     [ApiController]
     public class ActiveUsersController : ControllerBase
     {
@@ -24,11 +23,8 @@ namespace restApi.Controllers
             _context = context;
         }
 
-        // POST: api/ActiveUsers
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task PostActiveUser([FromBody]JsonDocument request)
+        [HttpPost("api/Login")]
+        public async Task Login([FromBody]JsonDocument request)
         {
 
             JObject jValue = WebMessageHelpers.GetJObjectFromBody(request);
@@ -36,7 +32,7 @@ namespace restApi.Controllers
             User userAuth = new User(0, jValue.GetValue("login").ToString(), jValue.GetValue("password").ToString());
             var user = _context.User.FirstOrDefault(row => row.Login == userAuth.Login);
 
-            byte[] body = UserHelpers.BadLogin();
+            byte[] body;
 
             if (user != null)
             {
@@ -45,6 +41,8 @@ namespace restApi.Controllers
 
                 if(user.Password != hashPassword)
                 {
+                    Response.StatusCode = 401;
+                    body = UserHelpers.WrongPasswordOrLogin();
                     await Response.Body.WriteAsync(body, 0, body.Length);
                     return;
                 }
@@ -52,7 +50,9 @@ namespace restApi.Controllers
                 var logedUser = _context.ActiveUser.FirstOrDefault(row => row.UserId == user.Id);
                 string token = "";
                 if (logedUser != null)
+                {
                     token = logedUser.Token;
+                }
                 else
                 {
                     token = UserHelpers.GenerateUserToken();
@@ -62,12 +62,38 @@ namespace restApi.Controllers
                 }
                 
                 body = UserHelpers.SuccessfulLogin(token);
+                Response.StatusCode = 200;
                 await Response.Body.WriteAsync(body, 0, body.Length);
             }
             else
             {
+                Response.StatusCode = 401;
+                body = UserHelpers.WrongPasswordOrLogin();
                 await Response.Body.WriteAsync(body, 0, body.Length);
+                return;
             }
+        }
+
+        [HttpPost("api/Logout")]
+
+        public async Task Logout([FromBody] JsonDocument request)
+        {
+            string[] token = Request.Headers.GetCommaSeparatedValues("Authorization");
+            if (token.Count() == 0)
+            {
+                Response.StatusCode = 403;
+                return;
+            }
+            var user = _context.ActiveUser.Find(token);
+            if (user == null)
+            {
+                Response.StatusCode = 400;
+                return;
+            }
+
+            _context.ActiveUser.Remove(user);
+            await _context.SaveChangesAsync();
+            Response.StatusCode = 200;
         }
 
         private bool ActiveUserExists(int id)
