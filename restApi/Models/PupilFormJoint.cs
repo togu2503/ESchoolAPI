@@ -15,6 +15,7 @@ namespace restApi.Models
         private Form _form;
 
         [Key]
+        [Column("id")]
         public int Id
         {
             get { return _id; }
@@ -27,6 +28,7 @@ namespace restApi.Models
             }
         }
         [Required]
+        [Column("pupil_id")]
         public Pupil Pupil
         {
             get { return _pupil; }
@@ -39,6 +41,7 @@ namespace restApi.Models
             }
         }
         [Required]
+        [Column("form_id")]
         public Form Form
         {
             get { return _form; }

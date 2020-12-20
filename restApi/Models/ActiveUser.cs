@@ -43,6 +43,7 @@ namespace restApi.Models
             }
         }
         [Required]
+        [Column("token")]
         public string Token
         {
             get { return _token; }

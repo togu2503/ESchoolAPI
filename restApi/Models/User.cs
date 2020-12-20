@@ -15,6 +15,8 @@ namespace restApi.Models
         private string _password;
         private int _accessLevel;
 
+        [Key]
+        [Column("id")]
         public int Id
         {
             get { return _id; }
@@ -28,6 +30,7 @@ namespace restApi.Models
         }
         [Required]
         [MaxLength(64)]
+        [Column("login")]
         public string Login
         {
             get
@@ -44,6 +47,7 @@ namespace restApi.Models
         }
         [Required]
         [MaxLength(256)]
+        [Column("password")]
         public string Password
         {
             get { return _password; }
@@ -75,13 +79,11 @@ namespace restApi.Models
 
         public override bool Equals(object obj)
         {
-            var temp = (User)obj;
-            if(obj == null)
+            if(obj is User user)
             {
-                return false;
+                if (Id == user.Id && Login == user.Login && Password == user.Password && AccessLevel == user.AccessLevel)
+                    return true;
             }
-            if (Id == temp.Id && Login == temp.Login && Password == temp.Password && AccessLevel == temp.AccessLevel)
-                return true;
             return false;
         }
     }
