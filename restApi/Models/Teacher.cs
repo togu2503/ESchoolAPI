@@ -15,7 +15,10 @@ namespace restApi.Models
         private string _surname;
         private string _patronymic;
         private string _phone;
+        private int _accountId;
+
         [Key]
+        [Column("id")]
         public int Id
         {
             get { return _id; }
@@ -29,6 +32,7 @@ namespace restApi.Models
         }
         [Required]
         [MaxLength(256)]
+        [Column("name")]
         public string Name
         {
             get { return _name; }
@@ -42,6 +46,7 @@ namespace restApi.Models
         }
         [Required]
         [MaxLength(256)]
+        [Column("surname")]
         public string Surname
         {
             get { return _surname; }
@@ -55,6 +60,7 @@ namespace restApi.Models
         }
         [Required]
         [MaxLength(256)]
+        [Column("patronymic")]
         public string Patronymic
         {
             get { return _patronymic; }
@@ -67,10 +73,18 @@ namespace restApi.Models
             }
         }
         [MaxLength(256)]
+        [Column("phone")]
         public string Phone
         {
             get { return _phone; }
             set { _phone = value; }
+        }
+        
+        [Column("account_id")]
+        public int AccountId
+        {
+            get { return _accountId; }
+            set { _accountId = value; }
         }
     }
 }

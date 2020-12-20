@@ -12,9 +12,10 @@ namespace restApi.Models
     {
         private int _id;
         private string _tasks;
-        private Lesson _lesson;
+        private int _lessonInCuriculumId;
         private DateTime _date;
         [Key]
+        [Column("id")]
         public int Id 
         { 
             get { return _id; }
@@ -27,24 +28,22 @@ namespace restApi.Models
             }
         }
         [MaxLength(256)]
+        [Column("tasks")]
         public string Tasks
         {
             get => _tasks;
             set => _tasks = value;
         }
         [Required]        
-        public Lesson Lesson
+        [Column("lesson")]
+        public int LessonId
         {
-            get { return _lesson; }
-            set
-            {
-                if(value != null)
-                {
-                    _lesson = value;
-                }
-            }
+            get { return _lessonInCuriculumId; }
+            set {_lessonInCuriculumId = value;}
         }
+
         [Required]
+        [Column("date")]
         public DateTime Date
         {
             get { return _date; }
@@ -60,5 +59,7 @@ namespace restApi.Models
                 }
             }
         }
+
+        public virtual Curiculum Lesson{ get; set; }
     }
 }

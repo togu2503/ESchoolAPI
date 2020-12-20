@@ -12,9 +12,10 @@ namespace restApi.Models
     {
         private int _id;
         private string _title;
-        private Teacher _teacher;
+
 
         [Key]
+        [Column("id")]
         public int Id
         {
             get { return _id; }
@@ -28,6 +29,7 @@ namespace restApi.Models
         }
         [Required]
         [MaxLength(256)]
+        [Column("title")]
         public string Title
         {
             get { return _title; }
@@ -40,18 +42,6 @@ namespace restApi.Models
                 else
                 {
                     _title = "Default Title";
-                }
-            }
-        }
-        [Required]
-        public Teacher Teacher
-        {
-            get { return _teacher; }
-            set
-            {
-                if(value != null)
-                {
-                    _teacher = value;                    
                 }
             }
         }

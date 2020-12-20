@@ -13,7 +13,7 @@ namespace restApi.Models
         private int _id;
         private string _login;
         private string _password;
-        private string _permissions;
+        private int _accessLevel;
 
         public int Id
         {
@@ -57,24 +57,32 @@ namespace restApi.Models
         }
         [Required]
         [MaxLength(128)]
-        public string Permissions
+        [Column("access_level")]
+        public int AccessLevel
         {
-            get { return _permissions; }
-            set
-            {
-                if (!String.IsNullOrEmpty(value) || !String.IsNullOrWhiteSpace(value))
-                {
-                    _permissions = value;
-                }
-            }
+            get { return _accessLevel;}
+            set {_accessLevel = value;}
+  
         }
 
-        public User(int id=0, string login="", string password="", string permissions="")
+        public User(int id=0, string login="", string password="", int accessLevel = 0)
         {
             Id = id;
             Login = login;
             Password = password;
-            Permissions = permissions;
+            AccessLevel = accessLevel;
+        }
+
+        public override bool Equals(object obj)
+        {
+            var temp = (User)obj;
+            if(obj == null)
+            {
+                return false;
+            }
+            if (Id == temp.Id && Login == temp.Login && Password == temp.Password && AccessLevel == temp.AccessLevel)
+                return true;
+            return false;
         }
     }
 }

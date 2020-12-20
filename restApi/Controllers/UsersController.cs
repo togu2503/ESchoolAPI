@@ -19,7 +19,6 @@ using restApi.Models;
 
 namespace restApi.Controllers
 {
-    [Route("api/SignUp")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -30,15 +29,12 @@ namespace restApi.Controllers
             _context = context;
         }
 
-        // POST: api/Users
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
+        [HttpPost("api/SignUp")]
         public async Task PostUser([FromBody] JsonDocument request)
         {
-            JObject jValue = JObject.Parse(request.RootElement.ToString());
+            JObject jValue = WebMessageHelpers.GetJObjectFromBody(request);
             User user = new User(0, jValue.GetValue("login").ToString(), jValue.GetValue("password").ToString());
-            user.Permissions = "0";
+            user.AccessLevel = 0;
             Response.ContentType = "application/json";
             byte[] body;
 
@@ -46,6 +42,7 @@ namespace restApi.Controllers
 
             if (_context.User.FirstOrDefault(row => row.Login == user.Login) != null)
             {
+                Response.StatusCode = 400;
                 body = UserHelpers.DuplicateUserResponse();    
                 await Response.Body.WriteAsync(body, 0, body.Length);
                 return;
@@ -55,23 +52,43 @@ namespace restApi.Controllers
             await _context.SaveChangesAsync();
             
             body = UserHelpers.SuccessfulUserAdding();
+            Response.StatusCode = 200;
             await Response.Body.WriteAsync(body, 0, body.Length);
         }
 
-        // DELETE: api/Users/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<User>> DeleteUser(int id)
+        [HttpDelete("api/DeleteUser")]
+        public async Task DeleteUser([FromBody] JsonDocument request)
         {
-            var user = await _context.User.FindAsync(id);
+            byte[] body;
+            JObject jValue = WebMessageHelpers.GetJObjectFromBody(request);
+            string[] token = Request.Headers.GetCommaSeparatedValues("Authorization");
+            if(token.Count()==0)
+            {
+                Response.StatusCode = 403;
+                return;
+            }
+            var user = UserHelpers.GetUser(token[0], _context);
             if (user == null)
             {
-                return NotFound();
+                Response.StatusCode = 400;
+                return;
             }
 
+            var tempLogin = jValue.GetValue("login").ToString();
+
+            var tempPassword = jValue.GetValue("password").ToString();
+
+            if(user.Login != tempLogin && user.Password != UserHelpers.HashPassword(tempLogin,tempPassword))
+            {
+                Response.StatusCode = 400;
+                body = UserHelpers.DuplicateUserResponse();
+                await Response.Body.WriteAsync(body, 0, body.Length);
+            }
+            
             _context.User.Remove(user);
             await _context.SaveChangesAsync();
-
-            return user;
+            body = UserHelpers.SuccessDeleting();
+            await Response.Body.WriteAsync(body, 0, body.Length);
         }
 
         private bool UserExists(int id)
