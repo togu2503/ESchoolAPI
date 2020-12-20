@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using restApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using restApi.Models;
 namespace restApi.DAL
 {
     public class ApplicationDBContext : DbContext

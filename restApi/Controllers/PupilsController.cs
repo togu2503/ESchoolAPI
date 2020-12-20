@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using restApi.DAL;
 using restApi.Models;
+using System.Text.Json;
 
 namespace restApi.Controllers
 {
@@ -21,9 +22,12 @@ namespace restApi.Controllers
             _context = context;
         }
 
+
+        //TODO : GET Pupil
+
         // GET: api/Pupils
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Pupil>>> GetPupil()
+        public async Task<ActionResult<IEnumerable<Pupil>>> GetPupil([FromBody] JsonDocument request)
         {
             return await _context.Pupil.ToListAsync();
         }
@@ -40,7 +44,7 @@ namespace restApi.Controllers
             }
 
             return pupil;
-        }
+        }   
 
         // PUT: api/Pupils/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
