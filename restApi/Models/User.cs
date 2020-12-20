@@ -81,6 +81,8 @@ namespace restApi.Models
         {
             if(obj is User user)
             {
+                if (user == null)
+                    return false;
                 if (Id == user.Id && Login == user.Login && Password == user.Password && AccessLevel == user.AccessLevel)
                     return true;
             }
