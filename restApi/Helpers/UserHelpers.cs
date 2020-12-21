@@ -20,6 +20,11 @@ namespace restApi.Helpers
 {
     public class UserHelpers
     {
+        enum Permissions
+        {
+            Pupil,
+            Teacher
+        }
         static public string HashPassword(string login, string password)
         {
          byte[] salt = Encoding.UTF8.GetBytes(login);
@@ -73,7 +78,7 @@ namespace restApi.Helpers
         static public byte[] SuccessfulLogin(string token)
         {
             var responseBody = new JObject();
-            responseBody.Add("auth", token);
+            responseBody.Add("token", token);
             byte[] body = Encoding.UTF8.GetBytes(responseBody.ToString());
             return body;
         }

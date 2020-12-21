@@ -28,7 +28,8 @@ namespace restApi.Controllers
         {
 
             JObject jValue = WebMessageHelpers.GetJObjectFromBody(request);
-
+            Response.Headers.Add("Access-Control-Allow-Headers", "*");
+            Response.Headers.Add("Content-Type", "application/json");
             User userAuth = new User(0, jValue.GetValue("login").ToString(), jValue.GetValue("password").ToString());
             var user = _context.User.FirstOrDefault(row => row.Login == userAuth.Login);
 

@@ -14,11 +14,13 @@ using restApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Sqlite;
 using restApi.DAL;
+using System.Web.Http;
 
 namespace restApi
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -32,6 +34,20 @@ namespace restApi
             services.AddDbContext<ApplicationDBContext>(options => 
                                             options.UseSqlite(Configuration.GetConnectionString("cs")));
             services.AddRazorPages();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:3000")
+                               .AllowAnyHeader()
+                               .AllowAnyMethod()
+                               .AllowCredentials();
+                    });
+            }
+            );
+
             services.AddControllers();
         }
 
@@ -48,8 +64,10 @@ namespace restApi
 
             app.UseRouting();
 
+            app.UseCors(MyAllowSpecificOrigins);
+
             app.UseAuthorization();
-   
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
