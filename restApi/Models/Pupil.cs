@@ -16,8 +16,19 @@ namespace restApi.Models
         private string _patronymic;
         private string _phone;
         private int _accountId;
-        
+
+        public Pupil(int id = 0, string name = "", string surname = "", string patronymic = "", string phone = "", int accountId = 0)
+        {
+            Id = id;
+            Name = name;
+            Surname = surname;
+            Patronymic = patronymic;
+            Phone = phone;
+            AccountId = accountId;
+        }
+
         [Key]
+        [Column("id")]
         public int Id
         {
             get { return _id; }
@@ -30,6 +41,7 @@ namespace restApi.Models
             }
         }
         [Required]
+        [Column("name")]
         [MaxLength(256)]
         public string Name
         {
@@ -46,6 +58,7 @@ namespace restApi.Models
             } 
         }
         [Required]
+        [Column("surname")]
         [MaxLength(256)]
         public string Surname
         {
@@ -59,6 +72,7 @@ namespace restApi.Models
             }
         }
         [Required]
+        [Column("patronymic")]
         [MaxLength(256)]
         public string Patronymic
         {
@@ -71,7 +85,9 @@ namespace restApi.Models
                 }
             }
         }
+
         [MaxLength(256)]
+        [Column("phone")]
         public string Phone
         {   
             get => _phone;
@@ -82,7 +98,12 @@ namespace restApi.Models
         public int AccountId
         {
             get { return _accountId; }
-            set { _accountId = value; }
+            set 
+            {
+                if (value != null)
+                    _accountId = value;
+                else _accountId = 0;
+            }
         }
     }
 }

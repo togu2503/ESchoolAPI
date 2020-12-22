@@ -18,13 +18,15 @@ using restApi.Models;
 
 namespace restApi.Helpers
 {
+    enum Permissions
+    {
+        User = 0,
+        Pupil = 1,
+        Teacher = 2,
+    }
     public class UserHelpers
     {
-        enum Permissions
-        {
-            Pupil,
-            Teacher
-        }
+
         static public string HashPassword(string login, string password)
         {
          byte[] salt = Encoding.UTF8.GetBytes(login);
@@ -57,7 +59,7 @@ namespace restApi.Helpers
             var user = context.User.FirstOrDefault(u => u.Id == userId);
             if (user != null)
                 return user;
-            return null;
+            return new User();
         }
         static public byte[] DuplicateUserResponse()
         {
@@ -78,7 +80,7 @@ namespace restApi.Helpers
         static public byte[] SuccessfulLogin(string token)
         {
             var responseBody = new JObject();
-            responseBody.Add("token", token);
+            responseBody.Add("auth", token);
             byte[] body = Encoding.UTF8.GetBytes(responseBody.ToString());
             return body;
         }
@@ -95,6 +97,22 @@ namespace restApi.Helpers
         {
             var responseBody = new JObject();
             responseBody.Add("status", "wrong password or login");
+            byte[] body = Encoding.UTF8.GetBytes(responseBody.ToString());
+            return body;
+        }
+
+        static public byte[] UserOrPupilAbsent()
+        {
+            var responseBody = new JObject();
+            responseBody.Add("status", "there is no such pupil or user");
+            byte[] body = Encoding.UTF8.GetBytes(responseBody.ToString());
+            return body;
+        }
+
+        static public byte[] PupilAlreadySynced()
+        {
+            var responseBody = new JObject();
+            responseBody.Add("status", "this user already has account");
             byte[] body = Encoding.UTF8.GetBytes(responseBody.ToString());
             return body;
         }

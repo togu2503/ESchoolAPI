@@ -19,7 +19,7 @@ using restApi.Models;
 
 namespace restApi.Controllers
 {
-    [Route("api/GetTimeTable")]
+    [Route("api")]
     [ApiController]
     public class CurriculaController : ControllerBase
     {
@@ -30,86 +30,12 @@ namespace restApi.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("/GetTimeTable")]
         public async Task GetCurriculum()
         {
             byte [] body = CuriculumHelpers.GetTimeTableWithoutHomeworkResponse(_context);
             await Response.Body.WriteAsync(body, 0, body.Length);
 
-        }
-
-        // GET: api/Curricula/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Curiculum>> GetCurriculum(int id)
-        {
-            var curriculum = await _context.Curriculum.FindAsync(id);
-
-            if (curriculum == null)
-            {
-                return NotFound();
-            }
-
-            return curriculum;
-        }
-
-        // PUT: api/Curricula/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCurriculum(int id, Curiculum curriculum)
-        {
-            if (id != curriculum.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(curriculum).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CurriculumExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Curricula
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<Curiculum>> PostCurriculum(Curiculum curriculum)
-        {
-            _context.Curriculum.Add(curriculum);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetCurriculum", new { id = curriculum.Id }, curriculum);
-        }
-
-        // DELETE: api/Curricula/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Curiculum>> DeleteCurriculum(int id)
-        {
-            var curriculum = await _context.Curriculum.FindAsync(id);
-            if (curriculum == null)
-            {
-                return NotFound();
-            }
-
-            _context.Curriculum.Remove(curriculum);
-            await _context.SaveChangesAsync();
-
-            return curriculum;
         }
 
         private bool CurriculumExists(int id)

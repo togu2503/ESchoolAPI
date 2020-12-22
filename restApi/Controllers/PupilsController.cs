@@ -5,12 +5,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Web;
+using System.Text;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore.Metadata;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Text.Json;
+using Newtonsoft.Json.Linq;
+using restApi.Helpers;
 using restApi.DAL;
 using restApi.Models;
 
 namespace restApi.Controllers
 {
-    [Route("api/pupils")]
     [ApiController]
     public class PupilsController : ControllerBase
     {
@@ -21,85 +29,51 @@ namespace restApi.Controllers
             _context = context;
         }
 
-        // GET: api/Pupils
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Pupil>>> GetPupil()
+        [HttpPost("api/AttachPupilAccount")]
+        public async Task AttachPupilAccount([FromBody] JsonDocument request)
         {
-            return await _context.Pupil.ToListAsync();
-        }
-
-        // GET: api/Pupils/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Pupil>> GetPupil(int id)
-        {
-            var pupil = await _context.Pupil.FindAsync(id);
-
-            if (pupil == null)
+            if(Request.Headers.GetCommaSeparatedValues("Authorization").ToList().Count<1)
             {
-                return NotFound();
+                Response.StatusCode = 403;
+                return;
             }
 
-            return pupil;
-        }
+            JObject jValue = WebMessageHelpers.GetJObjectFromBody(request);
 
-        // PUT: api/Pupils/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPupil(int id, Pupil pupil)
-        {
-            if (id != pupil.Id)
-            {
-                return BadRequest();
-            }
+            string userLogin = jValue.GetValue("login").ToString();
+            int pupilId = Int32.Parse(jValue.GetValue("pupilId").ToString());
+            string token = Request.Headers.GetCommaSeparatedValues("Authorization").ToList().ElementAt(0);
 
-            _context.Entry(pupil).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PupilExists(id))
+            if(UserHelpers.GetUser(token,_context).AccessLevel < (int)Permissions.Teacher)
                 {
-                    return NotFound();
+                    Response.StatusCode = 403;
+                    return;
                 }
-                else
-                {
-                    throw;
-                }
-            }
 
-            return NoContent();
-        }
-
-        // POST: api/Pupils
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<Pupil>> PostPupil(Pupil pupil)
-        {
-            _context.Pupil.Add(pupil);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetPupil", new { id = pupil.Id }, pupil);
-        }
-
-        // DELETE: api/Pupils/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Pupil>> DeletePupil(int id)
-        {
-            var pupil = await _context.Pupil.FindAsync(id);
-            if (pupil == null)
+            Response.ContentType = "application/json";
+            byte[] body;
+            var pupil = _context.Pupil.FirstOrDefault(row => row.Id == pupilId);
+            User user = _context.User.FirstOrDefault(row => row.Login == userLogin);
+            if (user == null || pupil == null)
             {
-                return NotFound();
+                Response.StatusCode = 400;
+                body = UserHelpers.UserOrPupilAbsent();
+                await Response.Body.WriteAsync(body, 0, body.Length);
+                return;
             }
 
-            _context.Pupil.Remove(pupil);
-            await _context.SaveChangesAsync();
+            if (pupil.AccountId != 0)
+            {
+                Response.StatusCode = 400;
+                body = UserHelpers.PupilAlreadySynced();
+                await Response.Body.WriteAsync(body, 0, body.Length);
+                return;
+            }
 
-            return pupil;
+            pupil.AccountId = user.Id;
+            user.AccessLevel = (int)Permissions.Pupil;
+            await _context.SaveChangesAsync();
+            Response.StatusCode = 200;
         }
 
         private bool PupilExists(int id)
