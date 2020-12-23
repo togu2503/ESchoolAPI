@@ -77,7 +77,7 @@ namespace restApi.Controllers
 
         [HttpPost("api/Logout")]
 
-        public async Task Logout([FromBody] JsonDocument request)
+        public async Task Logout()
         {
             string[] token = Request.Headers.GetCommaSeparatedValues("Authorization");
             if (token.Count() == 0)
@@ -85,10 +85,10 @@ namespace restApi.Controllers
                 Response.StatusCode = 403;
                 return;
             }
-            var user = _context.ActiveUser.Find(token);
+            var user = _context.ActiveUser.FirstOrDefault(row => row.Token == token[0]);
             if (user == null)
             {
-                Response.StatusCode = 400;
+                Response.StatusCode = 401;
                 return;
             }
 
