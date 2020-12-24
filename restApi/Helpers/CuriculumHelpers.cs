@@ -85,15 +85,21 @@ namespace restApi.Helpers
         static public byte[] GetHomeWork(ApplicationDBContext context, int form, DateTime date)
         {
             List<Curiculum> curiculums = context.Curriculum.Where(row => row.FormId == form).ToList();
-            DateTime start = date.AddDays(-3);
-            DateTime finish = date.AddDays(3);
+            int offset = (int)date.DayOfWeek;
+            if (offset < 6)
+                offset = -offset;
+            else
+                offset = 7 - offset;
+            DateTime start = date.AddDays(offset);
+            DateTime finish = start.AddDays(6);
             //List<Homework> homeworks =  context.Homework.ToList();
             List<Homework> homeworks = context.Homework.ToList();
             for(int i=0;i< homeworks.Count();i++)
             {
-                if(homeworks[i].Date < start.Date || homeworks[i].Date>finish.Date)
+                if(homeworks[i].Date < start.Date || homeworks[i].Date > finish.Date)
                 {
                     homeworks.Remove(homeworks[i]);
+                    i--;
                 }
             }
             List<List<JObject>> weekTimeTable = new List<List<JObject>>();
