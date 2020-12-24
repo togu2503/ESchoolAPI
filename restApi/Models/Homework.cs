@@ -14,6 +14,15 @@ namespace restApi.Models
         private string _tasks;
         private int _lessonInCuriculumId;
         private DateTime _date;
+
+        public Homework(int id, string tasks, int lessonId, DateTime date)
+        {
+            Id = id;
+            Tasks = tasks;
+            LessonId = lessonId;
+            Date = date;
+        }
+
         [Key]
         [Column("id")]
         public int Id 

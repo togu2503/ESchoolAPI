@@ -17,6 +17,16 @@ namespace restApi.Models
         private string _phone;
         private int _accountId;
 
+        public Teacher(int id = 0, string name = "", string surname = "", string patronymic = "", string phone = "", int accountId = 0)
+        {
+            Id = id;
+            Name = name;
+            Surname = surname;
+            Patronymic = patronymic;
+            Phone = phone;
+            AccountId = accountId;
+        }
+
         [Key]
         [Column("id")]
         public int Id

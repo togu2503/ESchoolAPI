@@ -14,6 +14,13 @@ namespace restApi.Models
         private string _formTitle;
         private int _teacherId;
 
+        public Form(int id = 0, string formTitle = "", int teacherId = 0)
+        {
+            Id = id;
+            FormTitle = formTitle;
+            TeacherId = teacherId;
+        }
+
         [Key]
         [Column("id")]
         public int Id
@@ -47,13 +54,7 @@ namespace restApi.Models
         public int TeacherId
         {
             get { return _teacherId; }
-            set
-            {
-                if(value!=null)
-                {
-                    _teacherId = value;
-                }
-            }
+            set { _teacherId = value; }
         }
         public virtual Teacher Teacher { get; set; }
     }

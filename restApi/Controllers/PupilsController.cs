@@ -29,6 +29,158 @@ namespace restApi.Controllers
             _context = context;
         }
 
+        [HttpPost("api/CreatePupil")]
+        public async Task CreatePupil(Pupil pupil)
+        {
+            if (Request.Headers.GetCommaSeparatedValues("Authorization").ToList().Count < 1)
+            {
+                Response.StatusCode = 403;
+                return;
+            }
+
+            string token = Request.Headers.GetCommaSeparatedValues("Authorization").ToList().ElementAt(0);
+
+            if (UserHelpers.GetUser(token, _context).AccessLevel < (int)Permissions.Teacher)
+            {
+                Response.StatusCode = 403;
+                return;
+            }
+
+            if (_context.Pupil.Add(pupil).State == EntityState.Added)
+            {
+                await _context.SaveChangesAsync();
+                Response.StatusCode = 200;
+                return;
+            }
+            Response.StatusCode = 400;
+
+        }
+
+        [HttpGet("api/Pupils")]
+        public async Task GetPupil()
+        {
+            if (Request.Headers.GetCommaSeparatedValues("Authorization").ToList().Count < 1)
+            {
+                Response.StatusCode = 403;
+                return;
+            }
+
+            string token = Request.Headers.GetCommaSeparatedValues("Authorization").ToList().ElementAt(0);
+
+            if (UserHelpers.GetUser(token, _context).AccessLevel < (int)Permissions.Pupil)
+            {
+                Response.StatusCode = 403;
+                return;
+            }
+
+            byte[] body = PupilsHelpers.GetAllPupils(_context);
+            await Response.Body.WriteAsync(body, 0, body.Length);
+        }
+
+        [HttpGet("api/Pupils/{id}")]
+        public async Task GetPupil(int id)
+        {
+            if (Request.Headers.GetCommaSeparatedValues("Authorization").ToList().Count < 1)
+            {
+                Response.StatusCode = 403;
+                return;
+            }
+
+            string token = Request.Headers.GetCommaSeparatedValues("Authorization").ToList().ElementAt(0);
+
+            if (UserHelpers.GetUser(token, _context).AccessLevel < (int)Permissions.Pupil)
+            {
+                Response.StatusCode = 403;
+                return;
+            }
+
+            var pupil = await _context.Pupil.FindAsync(id);
+
+            if (pupil == null)
+            {
+                Response.StatusCode = 400;
+                return;
+            }
+
+            byte[] body = PupilsHelpers.GetPupil(_context, id);
+            await Response.Body.WriteAsync(body, 0, body.Length);
+        }
+
+
+        [HttpPut("api/Pupils/{id}")]
+        public async Task<IActionResult> PutPupil(int id, Pupil pupil)
+        {
+            if (Request.Headers.GetCommaSeparatedValues("Authorization").ToList().Count < 1)
+            {
+                Response.StatusCode = 403;
+                return null;
+            }
+
+            string token = Request.Headers.GetCommaSeparatedValues("Authorization").ToList().ElementAt(0);
+
+            if (UserHelpers.GetUser(token, _context).AccessLevel < (int)Permissions.Pupil)
+            {
+                Response.StatusCode = 403;
+                return null;
+            }
+
+            if (id != pupil.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(pupil).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PupilExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+
+        [HttpDelete("api/Pupils/{id}")]
+        public async Task<ActionResult<Pupil>> DeletePupil(int id)
+        {
+            if (Request.Headers.GetCommaSeparatedValues("Authorization").ToList().Count < 1)
+            {
+                Response.StatusCode = 403;
+                return null;
+            }
+
+            string token = Request.Headers.GetCommaSeparatedValues("Authorization").ToList().ElementAt(0);
+
+            if (UserHelpers.GetUser(token, _context).AccessLevel < (int)Permissions.Pupil)
+            {
+                Response.StatusCode = 403;
+                return null;
+            }
+
+            var pupil = await _context.Pupil.FindAsync(id);
+            if (pupil == null)
+            {
+                return NotFound();
+            }
+
+            _context.Pupil.Remove(pupil);
+            await _context.SaveChangesAsync();
+
+            return pupil;
+        }
+
+
         [HttpPost("api/AttachPupilAccount")]
         public async Task AttachPupilAccount([FromBody] JsonDocument request)
         {
@@ -75,6 +227,8 @@ namespace restApi.Controllers
             await _context.SaveChangesAsync();
             Response.StatusCode = 200;
         }
+
+
 
         private bool PupilExists(int id)
         {

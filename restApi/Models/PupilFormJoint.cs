@@ -11,10 +11,18 @@ namespace restApi.Models
     public class PupilFormJoint
     {
         private int _id;
-        private Pupil _pupil;
-        private Form _form;
+        private int _pupilId;
+        private int _formId;
+
+        public PupilFormJoint(int id = 0, int pupilId = 0, int formId = 0)
+        {
+            Id = id;
+            PupilId = pupilId;
+            FormId = formId;
+        }
 
         [Key]
+        [Column("id")]
         public int Id
         {
             get { return _id; }
@@ -27,30 +35,24 @@ namespace restApi.Models
             }
         }
         [Required]
-        public Pupil Pupil
+        [Column("pupil_id")]
+        public int PupilId
         {
-            get { return _pupil; }
-            set
-            {
-                if(value != null)
-                {
-                    _pupil = value;
-                }
-            }
-        }
-        [Required]
-        public Form Form
-        {
-            get { return _form; }
-            set
-            {
-                if(value != null)
-                {
-                    _form = value;
-                }
-            }
+            get { return _pupilId; }
+            set { _pupilId = value; }
         }
 
-        
+        [Required]
+        [Column("form_id")]
+        public int FormId
+        {
+            get { return _formId; }
+            set { _formId = value; }
+        }
+
+        public virtual Form Form { get; set; }
+        public virtual Pupil Pupil { get; set; }
+
+
     }
 }

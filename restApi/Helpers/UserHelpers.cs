@@ -55,7 +55,12 @@ namespace restApi.Helpers
 
         static public User GetUser(string token,ApplicationDBContext context)
         {
-           int userId = context.ActiveUser.FirstOrDefault(activeUser => activeUser.Token == token).UserId;
+            ActiveUser activeUser = context.ActiveUser.FirstOrDefault(activeUser => activeUser.Token == token);
+            int userId = 0;
+            if(activeUser == null)
+                return new User();
+
+            userId = activeUser.UserId;
             var user = context.User.FirstOrDefault(u => u.Id == userId);
             if (user != null)
                 return user;

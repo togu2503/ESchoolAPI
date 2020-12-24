@@ -13,6 +13,11 @@ namespace restApi.Models
         private int _id;
         private string _title;
 
+        public Lesson(int id, string title)
+        {
+            Id = id;
+            Title = title;
+        }
 
         [Key]
         [Column("id")]

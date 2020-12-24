@@ -72,9 +72,62 @@ namespace restApi.Helpers
             return body;
         }
 
-        static public byte[] GetTimeTableWithHomeworkResponse(ApplicationDBContext context)
+        static public int IsHomeworkInList(List<Curiculum> curiculums, int id)
         {
-            return new byte [0];
+            for(int i=0;i<curiculums.Count();i++)
+            {
+                if (curiculums[i].Id == id)
+                    return i; 
+            }
+            return -1;
+        }
+
+        static public byte[] GetHomeWork(ApplicationDBContext context, int form, DateTime date)
+        {
+            List<Curiculum> curiculums = context.Curriculum.Where(row => row.FormId == form).ToList();
+            DateTime start = date.AddDays(-3);
+            DateTime finish = date.AddDays(3);
+            //List<Homework> homeworks =  context.Homework.ToList();
+            List<Homework> homeworks = context.Homework.ToList();
+            for(int i=0;i< homeworks.Count();i++)
+            {
+                if(homeworks[i].Date < start.Date || homeworks[i].Date>finish.Date)
+                {
+                    homeworks.Remove(homeworks[i]);
+                }
+            }
+            List<List<JObject>> weekTimeTable = new List<List<JObject>>();
+            for (int i = 0; i < 7; i++)
+                weekTimeTable.Add(new List<JObject>());
+            JObject res = new JObject();
+            for (int i = 0; i < homeworks.Count(); i++)
+            {
+
+                int curiculumId = IsHomeworkInList(curiculums, homeworks[i].LessonId);
+                if (curiculumId != -1)
+                {
+                    //if day == 0 it means that it is Sunday 1 == Monday etc.
+                    JObject lesson = new JObject();
+                    lesson.Add("lesson", context.Lesson.Find(curiculums[curiculumId].LessonId).Title);
+                    lesson.Add("homework", homeworks[i].Tasks);
+                    weekTimeTable[curiculums[curiculumId].Day].Add(lesson);
+                }
+            }
+                for (int day = (int)DayOfWeek.Monday; day < (int)DayOfWeek.Saturday; day++)
+                {
+                    JArray dayJSON = new JArray();
+                    for (int lesson = 0; lesson < weekTimeTable[day].Count; lesson++)
+                    {
+                        dayJSON.Add(weekTimeTable[day][lesson]);
+                    }
+                    res.Add(GetDayByNum(day), dayJSON);
+                    dayJSON = new JArray();
+                }
+
+            res.Add("form", context.Form.Find(form).FormTitle);
+
+            byte[] body = Encoding.UTF8.GetBytes(res.ToString());
+            return body;
         }
     }
 }

@@ -15,11 +15,13 @@ namespace restApi.DAL
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options)
     : base(options)
         { }
-        public DbSet<restApi.Models.Pupil> Pupil { get; set; }
-        public DbSet<restApi.Models.User> User { get; set; }
-        public DbSet<restApi.Models.ActiveUser> ActiveUser { get; set; }
-        public DbSet<restApi.Models.Curiculum> Curriculum { get; set; }
-        public DbSet<restApi.Models.Lesson> Lesson{ get; set; }
-        public DbSet<restApi.Models.Form> Form { get; set; }
+        public DbSet<Pupil> Pupil { get; set; }
+        public DbSet<User> User { get; set; }
+        public DbSet<ActiveUser> ActiveUser { get; set; }
+        public DbSet<Curiculum> Curriculum { get; set; }
+        public DbSet<Homework> Homework { get; set; }
+        public DbSet<Lesson> Lesson{ get; set; }
+        public DbSet<PupilFormJoint> PupilFormJoints { get; set; }
+        public DbSet<Form> Form { get; set; }
     }
 }
